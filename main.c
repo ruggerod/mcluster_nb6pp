@@ -84,7 +84,7 @@ int main (int argv, char **argc) {
 	int mfunc = 1;					//0 = single mass stars; 1 = use Kroupa (2001) mass function; 2 = use multi power law (based on mufu.c by L.Subr)
 	double single_mass = 1.0;		//Stellar mass in case of single-mass cluster 
 	double mlow = 0.08;				//Lower mass limit for mfunc = 1 & mfunc = 4
-	double mup = 100.0;				//Upper mass limit for mfunc = 1 & mfunc = 4
+	double mup = 30.0;				//Upper mass limit for mfunc = 1 & mfunc = 4
 	double alpha[MAX_AN] = {-1.35, -2.35, -2.7, 0.0, 0.0};		//alpha slopes for mfunc = 2
 	double mlim[MAX_MN] = {0.08, 0.5, 4.0, 100.0, 0.0, 0.0};	//mass limits for mfunc = 2
 	double alpha_L3 = 2.3;			//alpha slope for mfunc = 4 (L3 mass function, Maschberger 2012)
