@@ -75,7 +75,7 @@ int main (int argv, char **argc) {
 	double gamma[3] = {2.0, 0.0, 2.0}; //Power-law slopes of EFF/Nuker templates (outer slope, inner slope, transition); set gamma[1] = 0.0 and gamma[2] = 2.0 for EFF (profile = 3)  
 	double a = 1.0;					//Scale radius of EFF/Nuker template (profile = 3) [pc]
 	double Rmax = 100.0;			//Cut-off radius for EFF/Nuker template (profile = 3) [pc]
-	double tcrit = 100.0;			//Simulation time [N-body units (Myr in Nbody6 custom)]
+	double tcrit = 200000.0;			//Simulation time [N-body units (Myr in Nbody6 custom)]
 	int tf = 3;						//Tidal field: =0 no tidal field, =1 Near-field approximation, =2 point-mass galaxy, =3 Allen & Santillan (1991) MW potential (or Sverre's version of it)
 	double RG[3] = {8500.0,0.0,0.0}; //Initial Galactic coordinates of the cluster [pc]
 	double VG[3] = {0.0,220.0,0.0};  //Initial velocity of the cluster [km/s]
@@ -4919,10 +4919,10 @@ int output5(char *output, int N, int NNBMAX, double RS0, double dtadj, double dt
 	fprintf(PAR,"1 5000000.0 5000000.0 40 40 0\n");
 	fprintf(PAR,"%i 1 10 %i %i 1\n",N,seed,NNBMAX);
 	fprintf(PAR,"0.02 0.02 %.8f %.8f %.8f %.8f 1.0E-04 %.8f %.8f\n",RS0,dtadj,dtout,tcrit,rvir,mmean);
-	fprintf(PAR,"0 2 1 0 1 0 5 %i 3 2\n",(nbin>0?2:0));
+	fprintf(PAR,"0 2 1 0 1 0 5 %i 3 0\n",(nbin>0?2:0));
 	fprintf(PAR,"0 %i 0 %i 2 %i %i 0 %i 6\n",hrplot,tf,regupdate,etaupdate,mloss);
-	fprintf(PAR,"0 6 %i 0 1 2 2 0 0 1\n", esc);
-	fprintf(PAR,"1 0 3 2 1 0 0 2 0 0\n");
+	fprintf(PAR,"1 6 %i 0 1 2 2 0 0 1\n", esc);
+	fprintf(PAR,"1 0 0 2 0 0 0 2 0 0\n");
 	fprintf(PAR,"0 0 0 0 0 1 0 0 0 0\n");
 	fprintf(PAR,"1.0E-5 1.0E-4 0.2 1.0 1.0E-06 0.001 1.0\n");
 	fprintf(PAR,"2.350000 %.8f %.8f %i 0 %.8f %.8f %.8f\n",MMAX,mlow,nbin,Z,epoch,dtplot);
