@@ -36,8 +36,6 @@
  *      star[][14] = Zstar, metallicity of star                            *
  ***************************************************************************/
 
-#include <iostream>
-#include <random>
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -55,7 +53,6 @@
 #ifndef NOOMP
 #include<omp.h>
 #endif
-
 
 
 int main (int argv, char **argc) {
@@ -106,7 +103,7 @@ int main (int argv, char **argc) {
 	double msort = 5.0;				//Stars with masses > msort will be sorted and preferentially paired into binaries if pairing = 1
 	int adis = 0;					//Semi-major axis distribution; 0= flat ranging from amin to amax, 1= based on Kroupa (1995) period distribution, 2= based on Duquennoy & Mayor (1991) period distribution, 3= based on Kroupa (1995) period distribution for M<Msort; based on Sana et al. (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution for M>Msort (implemented by Long Wang)
 	int OBperiods = 0;				//Use period distribution for massive binaries with M_primary > msort from Sana & Evans (2011) if OBperiods = 1
-	double amin = 0.001*4.8481e-6;	//Minimum semi-major axis for adis = 0 [pc] (1 AU = 4.8481e-6 pc)
+	double amin = 0.1*4.8481e-6;	//Minimum semi-major axis for adis = 0 [pc] (1 AU = 4.8481e-6 pc)
 	double amax = 10.00*4.8481e-6;	//Maximum semi-major axis for adis = 0 [pc]
 #ifdef SSE
 	int eigen = 0;					//Use Kroupa (1995) eigenevolution for pre-main sequence short-period binaries; =0 off, =1 on [use either eigenevolution or BSE; BSE recommended when using SSE]
@@ -125,7 +122,7 @@ int main (int argv, char **argc) {
 	//Code parameters
 	int code = 3;					//Nbody version: =0 Nbody6, =1 Nbody4, =2 Nbody6 custom, =3 only create output list of stars, =4 Nbody7 (not yet fully functional), =5 Nbody6++GPU
 	unsigned int seed = 0;			//Number seed for random number generator; =0 for randomization by local time
-	char output[50] = "test";   	//Name of output files
+	char *output = "test";   		//Name of output files
 	double dtadj = 1.0;				//DTADJ [N-body units (Myr in Nbody6 custom)], energy-check time step
 	double dtout = 1.0;				//DELTAT [N-body units (Myr in Nbody6 custom)], output interval, must be multiple of DTADJ
 	double dtplot = 1.0;			//DTPLOT [N-body units (Myr in Nbody6 custom)], output of HRdiagnostics, should be multiple of DTOUT, set to zero if output not desired
@@ -3472,9 +3469,6 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 	
 	if (BSE) printf("\nSetting up binary population with Z = %.4f.\n",Z);
 	if (epoch) printf("\nEvolving binary population for %.1f Myr.\n",epoch);
-	
-	std::default_random_engine seed;
-  	std::lognormal_distribution<double> logdistr(amin,amax); // lognormal distribution in range [amin, amax]
 
 	for (i=0; i < nbin; i++) {
 
@@ -3517,8 +3511,7 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 				if (!i) printf("\nApplying flat semi-major axis distribution with amin = %g and amax = %g.\n", amin, amax);
 				if (!i) amin /= rvir;
 				if (!i) amax /= rvir;
-				//abin = amin+drand48()*(amax-amin);
-				abin = logdistr(seed); //value from a lognormal distribution
+				abin = pow(10., log10(amin) + (log10(amax)-log10(amin))*drand48()); // value from flat semi-major axis distribution 
 			} else if (adis == 1 || adis == 3) {
 				//derive from Kroupa (1995) period distribution
 				if (!i) printf("\nDeriving semi-major axis distribution from Kroupa (1995) period distribution.\n");
@@ -3592,7 +3585,7 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 			//ecc = 0.0;   // all circular 
 		
 			
-			
+			/*
 			//Apply Kroupa (1995) eigenevolution
 			eccold = ecc;
 			abinold = abin;
@@ -3611,7 +3604,7 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 				m2/=M;
 				abin/=rvir;
 			}
-		
+			*/
 		
 			//Apply Binary Star Evolution (Hurley, Tout & Pols 2002)
 			if (BSE) {

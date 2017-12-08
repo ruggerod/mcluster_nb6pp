@@ -5,7 +5,7 @@ FC = gfortran -O2 #-ffast-math
 
 LFLAGS = const_bse.h zdata.h 
 
-CC = g++ -std=c++11 -O2 -fopenmp -Wall #-ffast-math 
+CC = gcc -O2 -fopenmp -Wall #-ffast-math 
 #use "-D NOOMP" and remove "-fopenmp" for compilation without OpenMP
 
 #CFLAGS = -L/opt/local/lib/gcc44/ -lgfortran
