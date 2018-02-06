@@ -82,7 +82,7 @@ int main (int argv, char **argc) {
 	int mfunc = 1;					//0 = single mass stars; 1 = use Kroupa (2001) mass function; 2 = use multi power law (based on mufu.c by L.Subr)
 	double single_mass = 1.0;		//Stellar mass in case of single-mass cluster 
 	double mlow = 0.08;				//Lower mass limit for mfunc = 1 & mfunc = 4
-	double mup = 30.0;				//Upper mass limit for mfunc = 1 & mfunc = 4
+	double mup = 100.0;				//Upper mass limit for mfunc = 1 & mfunc = 4
 	double alpha[MAX_AN] = {-1.35, -2.35, -2.7, 0.0, 0.0};		//alpha slopes for mfunc = 2
 	double mlim[MAX_MN] = {0.08, 0.5, 4.0, 100.0, 0.0, 0.0};	//mass limits for mfunc = 2
 	double alpha_L3 = 2.3;			//alpha slope for mfunc = 4 (L3 mass function, Maschberger 2012)
@@ -103,8 +103,8 @@ int main (int argv, char **argc) {
 	double msort = 5.0;				//Stars with masses > msort will be sorted and preferentially paired into binaries if pairing = 1
 	int adis = 0;					//Semi-major axis distribution; 0= flat ranging from amin to amax, 1= based on Kroupa (1995) period distribution, 2= based on Duquennoy & Mayor (1991) period distribution, 3= based on Kroupa (1995) period distribution for M<Msort; based on Sana et al. (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution for M>Msort (implemented by Long Wang)
 	int OBperiods = 0;				//Use period distribution for massive binaries with M_primary > msort from Sana & Evans (2011) if OBperiods = 1
-	double amin = 0.1*4.8481e-6;	//Minimum semi-major axis for adis = 0 [pc] (1 AU = 4.8481e-6 pc)
-	double amax = 10.00*4.8481e-6;	//Maximum semi-major axis for adis = 0 [pc]
+	double amin = 0.1 * 4.8481e-6;	//Minimum semi-major axis for adis = 0 [pc] (1 AU = 4.8481e-6 pc)
+	double amax = 10.00 * 4.8481e-6;//Maximum semi-major axis for adis = 0 [pc]
 #ifdef SSE
 	int eigen = 0;					//Use Kroupa (1995) eigenevolution for pre-main sequence short-period binaries; =0 off, =1 on [use either eigenevolution or BSE; BSE recommended when using SSE]
 	int BSE = 1;					//Apply binary star evolution using BSE (Hurley, Tout & Pols 2002) =0 off, =1 on [use either eigenevolution or BSE; BSE recommended when using SSE]
@@ -122,7 +122,7 @@ int main (int argv, char **argc) {
 	//Code parameters
 	int code = 3;					//Nbody version: =0 Nbody6, =1 Nbody4, =2 Nbody6 custom, =3 only create output list of stars, =4 Nbody7 (not yet fully functional), =5 Nbody6++GPU
 	unsigned int seed = 0;			//Number seed for random number generator; =0 for randomization by local time
-	char *output = "test";   		//Name of output files
+	char *output = "mcl";   		//Name of output files
 	double dtadj = 1.0;				//DTADJ [N-body units (Myr in Nbody6 custom)], energy-check time step
 	double dtout = 1.0;				//DELTAT [N-body units (Myr in Nbody6 custom)], output interval, must be multiple of DTADJ
 	double dtplot = 1.0;			//DTPLOT [N-body units (Myr in Nbody6 custom)], output of HRdiagnostics, should be multiple of DTOUT, set to zero if output not desired
@@ -4731,15 +4731,15 @@ int output2(char *output, int N, int NNBMAX, double RS0, double dtadj, double dt
 	//write to .PAR file	
 	fprintf(PAR,"1 5000000.0 0\n");
 	fprintf(PAR,"%i 1 10 %i %i 1\n",N,seed,NNBMAX);
-	fprintf(PAR,"0.02 0.02 %.8f %.8f %.8f %.8f 1.0E-03 %.8f %.8f\n",RS0,dtadj,dtout,tcrit,rvir,mmean);
-	fprintf(PAR,"2 2 1 0 1 0 2 0 0 2\n");
+	fprintf(PAR,"0.02 0.02 %.8f %.8f %.8f %.8f 1.0E-04 %.8f %.8f\n",RS0,dtadj,dtout,tcrit,rvir,mmean);
+	fprintf(PAR,"0 2 1 1 1 0 5 %i 1 0\n",(nbin>0?2:0));
 	fprintf(PAR,"0 %i 0 %i 2 %i %i 0 %i 3\n",hrplot,tf,regupdate,etaupdate,mloss);
-	fprintf(PAR,"0 %i %i 0 1 2 0 1 0 1\n",bin, esc);
-	fprintf(PAR,"0 0 0 2 1 0 0 2 0 3\n");
+	fprintf(PAR,"1 4 %i 0 0 2 2 0 0 1\n", esc);
+	fprintf(PAR,"1 0 0 2 0 0 0 2 0 0\n");
 	fprintf(PAR,"0 0 0 0 0 0 0 0 0 0\n");
 	fprintf(PAR,"1.0E-5 1.0E-4 0.2 1.0 1.0E-06 0.001\n");
 	fprintf(PAR,"2.350000 %.8f %.8f %i 0 %.8f %.8f %.8f\n",MMAX,mlow,nbin,Z,epoch,dtplot);
-	fprintf(PAR,"%.2f 0.0 0.0 0.00000 0.125\n",Q);
+	fprintf(PAR,"%.2f 0.0 0.0 0.00000 1.0\n",Q);
 //	if (tf == 1) {
 //		rtide = pow(1.0*M/(3.0*M1pointmass),1.0/3.0)*sqrt(RG[0]*RG[0]+RG[1]*RG[1]+RG[2]*RG[2]);
 //		fprintf(PAR,"%i %.8f\n",0,sqrt(1.0/(3.0*pow(rtide,3))));
