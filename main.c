@@ -141,7 +141,7 @@ int main (int argv, char **argc) {
 	double Rgal = 10000.0;			//Distance of cluster from sun for artificial CMD with observational errors [pc] 
 	double Zsun = 0.02;				//Solar metallicity
 	int NMAX = 1500000;	     		//Maximum number of stars & orbits allowed in McLuster
-	int NNBMAX_NBODY6 = 500;		//Maximum number of neighbours allowed in NBODY6
+	int NNBMAX_NBODY6 = 600;		//Maximum number of neighbours allowed in NBODY6
 	double upper_IMF_limit = 150.0; //Maximum stellar mass allowed in McLuster [Msun]
 	int an = 0;						//Counter for number of alpha slopes for mfunc = 2
 	int mn = 0;						//Counter for number of mass limits for mfunc = 1, 2 & 4
