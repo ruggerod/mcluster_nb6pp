@@ -122,13 +122,13 @@ int main (int argv, char **argc) {
 	//Code parameters
 	int code = 3;					//Nbody version: =0 Nbody6, =1 Nbody4, =2 Nbody6 custom, =3 only create output list of stars, =4 Nbody7 (not yet fully functional), =5 Nbody6++GPU
 	unsigned int seed = 0;			//Number seed for random number generator; =0 for randomization by local time
-	char *output = "mcl";   		//Name of output files
+	char *output = "IC";	   		//Name of output files
 	double dtadj = 1.0;				//DTADJ [N-body units (Myr in Nbody6 custom)], energy-check time step
 	double dtout = 1.0;				//DELTAT [N-body units (Myr in Nbody6 custom)], output interval, must be multiple of DTADJ
-	double dtplot = 1.0;			//DTPLOT [N-body units (Myr in Nbody6 custom)], output of HRdiagnostics, should be multiple of DTOUT, set to zero if output not desired
+	double dtplot = 10.0;			//DTPLOT [N-body units (Myr in Nbody6 custom)], output of HRdiagnostics, should be multiple of DTOUT, set to zero if output not desired
 	int gpu = 0;					//Use of GPU, 0= off, 1= on
 	int regupdate = 0;				//Update of regularization parameters during computation; 0 = off, 0 > on
-	int etaupdate = 2;				//Update of ETAI & ETAR during computation; 0 = off, 0 > on
+	int etaupdate = 2;			//Update of ETAI & ETAR during computation; 0 = off, 0 > on
 	int esc = 2;					//Removal of escapers; 0 = no removal, 1 = regular removal at 2*R_tide; 2 = removal and output in ESC
 	int units = 1;				    //Units of McLuster output; 0= Nbody-Units, 1= astrophysical units
 	
@@ -4914,7 +4914,7 @@ int output5(char *output, int N, int NNBMAX, double RS0, double dtadj, double dt
 	
 	//write to .PAR file	
 	fprintf(PAR,"1 5000000.0 5000000.0 40 40 0\n");
-	fprintf(PAR,"%i 1 10 %i %i 1\n",N,seed,NNBMAX);
+	fprintf(PAR,"%i 10 10 %i %i 1\n",N,seed,NNBMAX);
 	fprintf(PAR,"0.02 0.02 %.8f %.8f %.8f %.8f 1.0E-04 %.8f %.8f\n",RS0,dtadj,dtout,tcrit,rvir,mmean);
 	fprintf(PAR,"0 2 1 0 1 0 1 %i 3 0\n",(nbin>0?2:0));
 	fprintf(PAR,"0 %i 0 %i 1 %i %i 0 %i 6\n",hrplot,tf,regupdate,etaupdate,mloss);
