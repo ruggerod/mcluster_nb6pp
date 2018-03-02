@@ -81,8 +81,8 @@ int main (int argv, char **argc) {
 	//Mass function parameters
 	int mfunc = 1;					//0 = single mass stars; 1 = use Kroupa (2001) mass function; 2 = use multi power law (based on mufu.c by L.Subr)
 	double single_mass = 1.0;		//Stellar mass in case of single-mass cluster 
-	double mlow = 0.08;				//Lower mass limit for mfunc = 1 & mfunc = 4
-	double mup = 100.0;				//Upper mass limit for mfunc = 1 & mfunc = 4
+	double mlow = 0.15;				//Lower mass limit for mfunc = 1 & mfunc = 4
+	double mup = 30.0;				//Upper mass limit for mfunc = 1 & mfunc = 4
 	double alpha[MAX_AN] = {-1.35, -2.35, -2.7, 0.0, 0.0};		//alpha slopes for mfunc = 2
 	double mlim[MAX_MN] = {0.08, 0.5, 4.0, 100.0, 0.0, 0.0};	//mass limits for mfunc = 2
 	double alpha_L3 = 2.3;			//alpha slope for mfunc = 4 (L3 mass function, Maschberger 2012)
@@ -129,7 +129,7 @@ int main (int argv, char **argc) {
 	int gpu = 0;					//Use of GPU, 0= off, 1= on
 	int regupdate = 0;				//Update of regularization parameters during computation; 0 = off, 0 > on
 	int etaupdate = 2;			//Update of ETAI & ETAR during computation; 0 = off, 0 > on
-	int esc = 2;					//Removal of escapers; 0 = no removal, 1 = regular removal at 2*R_tide; 2 = removal and output in ESC
+	int esc = 1;					//Removal of escapers; 0 = no removal, 1 = regular removal at 2*R_tide; 2 = removal and output in ESC
 	int units = 1;				    //Units of McLuster output; 0= Nbody-Units, 1= astrophysical units
 	
 	//McLuster internal parameters
@@ -4714,9 +4714,9 @@ int output2(char *output, int N, int NNBMAX, double RS0, double dtadj, double dt
 	//Open output files
 	char PARfile[50], NBODYfile[50], SSEfile[50];		
 	FILE *PAR, *NBODY, *SSE12;
-	sprintf(PARfile, "%s.PAR",output);
+	sprintf(PARfile, "%s.input",output);
 	PAR = fopen(PARfile,"w");
-	sprintf(NBODYfile, "%s.NBODY",output);
+	sprintf(NBODYfile, "%s.fort.10",output);
 	NBODY = fopen(NBODYfile,"w");
 	
 	int hrplot = 0;
@@ -4731,15 +4731,15 @@ int output2(char *output, int N, int NNBMAX, double RS0, double dtadj, double dt
 	//write to .PAR file	
 	fprintf(PAR,"1 5000000.0 0\n");
 	fprintf(PAR,"%i 1 10 %i %i 1\n",N,seed,NNBMAX);
-	fprintf(PAR,"0.02 0.02 %.8f %.8f %.8f %.8f 1.0E-04 %.8f %.8f\n",RS0,dtadj,dtout,tcrit,rvir,mmean);
-	fprintf(PAR,"0 2 1 1 1 0 5 %i 1 0\n",(nbin>0?2:0));
-	fprintf(PAR,"0 %i 0 %i 2 %i %i 0 %i 3\n",hrplot,tf,regupdate,etaupdate,mloss);
-	fprintf(PAR,"1 4 %i 0 0 2 2 0 0 1\n", esc);
-	fprintf(PAR,"1 0 0 2 0 0 0 2 0 0\n");
+	fprintf(PAR,"0.015 0.015 %.8f %.8f %.8f %.8f 1.0E-04 %.8f %.8f\n",RS0,dtadj,dtout,tcrit,rvir,mmean);
+	fprintf(PAR,"1 2 0 0 1 1 1 %i 1 0\n",(nbin>0?2:0));
+	fprintf(PAR,"0 %i 0 %i 0 %i %i 1 %i 0\n",hrplot,tf,regupdate,etaupdate,mloss);
+	fprintf(PAR,"1 4 %i 0 0 2 3 1 0 0\n", esc);
+	fprintf(PAR,"0 0 3 0 1 0 0 1 0 3\n");
 	fprintf(PAR,"0 0 0 0 0 0 0 0 0 0\n");
-	fprintf(PAR,"1.0E-5 1.0E-4 0.2 1.0 1.0E-06 0.001\n");
-	fprintf(PAR,"2.350000 %.8f %.8f %i 0 %.8f %.8f %.8f\n",MMAX,mlow,nbin,Z,epoch,dtplot);
-	fprintf(PAR,"%.2f 0.0 0.0 0.00000 1.0\n",Q);
+	fprintf(PAR,"1.0E-5 1.0E-4 0.1 1.0 1.0E-06 0.001\n");
+	fprintf(PAR,"2.3 %.8f %.8f %i 0 %.8f %.8f %.8f\n",MMAX,mlow,nbin,Z,epoch,dtplot);
+	fprintf(PAR,"%.2f 0.0 0.0 0.0 0.125\n",Q);
 //	if (tf == 1) {
 //		rtide = pow(1.0*M/(3.0*M1pointmass),1.0/3.0)*sqrt(RG[0]*RG[0]+RG[1]*RG[1]+RG[2]*RG[2]);
 //		fprintf(PAR,"%i %.8f\n",0,sqrt(1.0/(3.0*pow(rtide,3))));
