@@ -81,8 +81,8 @@ int main (int argv, char **argc) {
 	//Mass function parameters
 	int mfunc = 1;					//0 = single mass stars; 1 = use Kroupa (2001) mass function; 2 = use multi power law (based on mufu.c by L.Subr)
 	double single_mass = 1.0;		//Stellar mass in case of single-mass cluster 
-	double mlow = 0.15;				//Lower mass limit for mfunc = 1 & mfunc = 4
-	double mup = 30.0;				//Upper mass limit for mfunc = 1 & mfunc = 4
+	double mlow = 0.1;				//Lower mass limit for mfunc = 1 & mfunc = 4
+	double mup = 100.0;				//Upper mass limit for mfunc = 1 & mfunc = 4
 	double alpha[MAX_AN] = {-1.35, -2.35, -2.7, 0.0, 0.0};		//alpha slopes for mfunc = 2
 	double mlim[MAX_MN] = {0.08, 0.5, 4.0, 100.0, 0.0, 0.0};	//mass limits for mfunc = 2
 	double alpha_L3 = 2.3;			//alpha slope for mfunc = 4 (L3 mass function, Maschberger 2012)
@@ -141,7 +141,7 @@ int main (int argv, char **argc) {
 	double Rgal = 10000.0;			//Distance of cluster from sun for artificial CMD with observational errors [pc] 
 	double Zsun = 0.02;				//Solar metallicity
 	int NMAX = 1500000;	     		//Maximum number of stars & orbits allowed in McLuster
-	int NNBMAX_NBODY6 = 600;		//Maximum number of neighbours allowed in NBODY6
+	int NNBMAX_NBODY6 = 500;		//Maximum number of neighbours allowed in NBODY6
 	double upper_IMF_limit = 150.0; //Maximum stellar mass allowed in McLuster [Msun]
 	int an = 0;						//Counter for number of alpha slopes for mfunc = 2
 	int mn = 0;						//Counter for number of mass limits for mfunc = 1, 2 & 4
@@ -4730,7 +4730,7 @@ int output2(char *output, int N, int NNBMAX, double RS0, double dtadj, double dt
 	
 	//write to .PAR file	
 	fprintf(PAR,"1 5000000.0 0\n");
-	fprintf(PAR,"%i 1 10 %i %i 1\n",N,seed,NNBMAX);
+	fprintf(PAR,"%i 1 %i %i %i 1\n",N,N*30/100,seed,NNBMAX);
 	fprintf(PAR,"0.015 0.015 %.8f %.8f %.8f %.8f 1.0E-04 %.8f %.8f\n",RS0,dtadj,dtout,tcrit,rvir,mmean);
 	fprintf(PAR,"1 2 0 0 1 1 1 %i 1 0\n",(nbin>0?2:0));
 	fprintf(PAR,"0 %i 0 %i 0 %i %i 1 %i 0\n",hrplot,tf,regupdate,etaupdate,mloss);
